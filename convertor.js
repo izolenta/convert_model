@@ -1,18 +1,18 @@
 import * as fs from 'fs';
 import * as parser from 'xml2json';
 
-const trainAnnotationsDir = './data/train/annotations';
-const trainImagesDir = './data/train/images';
-const trainCsvFile = './data/train_data.csv';
+const trainAnnotationsDir = './data3/train/annotations';
+const trainImagesDir = './data3/train/images';
+const trainCsvFile = './data3/train_data.csv';
 
-const testAnnotationsDir = './data/test/annotations';
-const testImagesDir = './data/test/images';
-const testCsvFile = './data/test_data.csv';
+const testAnnotationsDir = './data3/test/annotations';
+const testImagesDir = './data3/test/images';
+const testCsvFile = './data3/test_data.csv';
 
-convertToCsv(trainAnnotationsDir, trainImagesDir, trainCsvFile, false);
-convertToCsv(testAnnotationsDir, testImagesDir, testCsvFile, true);
+convertToCsv(trainAnnotationsDir, trainImagesDir, trainCsvFile);
+convertToCsv(testAnnotationsDir, testImagesDir, testCsvFile);
 
-function convertToCsv(annotationsDir, imagesDir, csvOutput, isTest) {
+function convertToCsv(annotationsDir, imagesDir, csvOutput) {
   const csvFile = fs.createWriteStream(csvOutput);
   csvFile.write('filename,width,height,class,xmin,ymin,xmax,ymax\n')
 
@@ -24,11 +24,6 @@ function convertToCsv(annotationsDir, imagesDir, csvOutput, isTest) {
       let json = JSON.parse(parser.toJson(data, {}));
       let filename = json['annotation']['filename'];
       if (fs.existsSync(imagesDir+'/'+filename)) {
-        if (isTest && !filename.startsWith('test_')) {
-          let newFilename = 'test_'+filename;
-          fs.renameSync(imagesDir+'/'+filename, imagesDir+'/'+newFilename);
-          filename = newFilename;
-        }
         console.log(filename);
         const width = json['annotation']['size']['width'];
         const height = json['annotation']['size']['height'];

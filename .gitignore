@@ -3,3 +3,6 @@ node_modules/
 package-json.lock
 data/
 data2/
+data3/
+images/
+structure.csv
